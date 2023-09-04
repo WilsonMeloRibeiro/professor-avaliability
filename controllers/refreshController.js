@@ -13,16 +13,22 @@ const handleRefresh = (req, res) => {
     jwt.verify(
         cookie,
         process.env.REFRESH_TOKEN_SECRET,
-        (err, decoded)=>{
-            if(err || decoded.name !== userFound.name) return res.sendStatus(403);
+        (err, decoded) => {
+            if (err || decoded.name !== userFound.name) return res.sendStatus(403);
+            const roles = Object.values(userFound.roles)
             const accessToken = jwt.sign(
-                {'name': userFound.name},
+                {
+                    "UserInfo": {
+                        'roles': roles,
+                        'name': decoded.name
+                    }
+                },
                 process.env.ACCESS_TOKEN_SECRET,
-                {expiresIn: '30s'}
+                { expiresIn: '30s' }
             );
-            res.json({accessToken});
+            res.json({ accessToken });
         }
     )
 }
 
-module.exports = {handleRefresh}
+module.exports = { handleRefresh }

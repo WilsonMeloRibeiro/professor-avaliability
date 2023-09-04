@@ -15,6 +15,9 @@ const handleRegistration = async (req, res) => {
         const hashedPwd = await bcrypt.hash(pwd, 10);
         const newUser = {
             name: name,
+            roles:{
+                user: 200
+            },
             pwd: hashedPwd
         }
         fsPromisses.writeFile(

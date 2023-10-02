@@ -1,34 +1,33 @@
-require('dotenv').config;
 const jwt = require('jsonwebtoken');
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-}
+const user = require('../model/user')
 
-const handleRefresh = (req, res) => {
-    if (!req.cookies?.jwt) res.sendStatus(403);
-    const cookie = req.cookies.jwt;
-    const userFound = usersDB.users.find(Element => Element.refreshToken === cookie)
+const handleRefresh = async (req, res) => {
+    if (!req.cookies?.jwt) return res.sendStatus(403)
+    const cookie = req.cookies.jwt
+    const userFound = await user.findOne({ refreshToken: cookie })
+    console.log(userFound.refreshToken)
+    console.log(cookie)
     if (!userFound) return res.sendStatus(403)
     jwt.verify(
         cookie,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
-            if (err || decoded.name !== userFound.name) return res.sendStatus(403);
+            console.log(decoded)
+            if (err || userFound.username !== decoded.userInfo.username) return res.sendStatus(403)
             const roles = Object.values(userFound.roles)
             const accessToken = jwt.sign(
                 {
-                    "UserInfo": {
-                        'roles': roles,
-                        'name': decoded.name
+                    userInfo: {
+                        username: userFound.username,
+                        roles: roles
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '30s' }
-            );
-            res.json({ accessToken });
-        }
+                { expiresIn: '1m' }
+            )
+            return res.status(200).json(accessToken)
+        },
     )
 }
 
-module.exports = { handleRefresh }
+module.exports = handleRefresh

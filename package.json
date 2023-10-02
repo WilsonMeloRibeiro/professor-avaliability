@@ -21,6 +21,8 @@
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.1",
+    "mongodb": "^6.0.0",
+    "mongoose": "^7.5.0",
     "next": "13.4.18",
     "path": "^0.12.7",
     "postcss": "8.4.28",

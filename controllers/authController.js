@@ -1,47 +1,44 @@
-require('dotenv').config();
-const fsPromisses = require('fs').promises;
-const jwt = require('jsonwebtoken');
-const path = require('path');
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-}
+const user = require('../model/user');
 const bcrypt = require('bcrypt');
+const salt = 10;
+const jwt = require('jsonwebtoken');
 
 const handleLogin = async (req, res) => {
-    const { name, pwd } = req.body;
-    if (!name || !pwd) return res.status(400).json({ 'message': 'nome e senha são requeridos' });
-    const userFound = usersDB.users.find(Element => Element.name === name);
-    if (!userFound) return res.sendStatus(401)
-    const match = await bcrypt.compare(pwd, userFound.pwd);
-    if (match) {
-        const roles = Object.values(userFound?.roles)
-        const accessToken = jwt.sign(
+    const { username, password } = req.body
+    if (!username || !password) return res.sendStatus(400)
+    const userFound = await user.findOne({ username: username })
+    if(!userFound) return res.sendStatus(400)
+    const match = await bcrypt.compare(password, userFound.password)
+    console.log(match);
+    if(match){
+        const roles = Object.values(userFound.roles)
+        const REFRESH_TOKEN = jwt.sign(
             {
-                "UserInfo": {
-                    'roles': roles,
-                    'name': userFound.name
+                userInfo:{
+                    roles: roles,
+                    username: userFound.username
+                }
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            {expiresIn:'24h' }
+        )
+        const ACCESS_TOKEN = jwt.sign(
+            {
+                userInfo:{
+                    roles: roles,
+                    username: userFound.username
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s' }
-        );
-        const refreshToken = jwt.sign(
-            { 'name': userFound.name },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d' }
-        );
-        const otherUsers = usersDB.users.filter(Element => Element.name === userFound.name);
-        const authUser = { ...userFound, refreshToken };
-        usersDB.setUsers([...otherUsers, authUser]);
-        await fsPromisses.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
+            {expiresIn:'1m'}
         )
-        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-        res.send({ accessToken })
-    } else {
-        res.sendStatus(401)
+        userFound.refreshToken = REFRESH_TOKEN
+        const result = await userFound.save()
+        console.log(result);
+        res.cookie('jwt', REFRESH_TOKEN, {httpOnly:true, expiresIn: '24h'})
+        res.status(200).json(ACCESS_TOKEN)
     }
+    else return res.sendStatus(403)
 }
-module.exports = { handleLogin };
+
+module.exports = handleLogin;

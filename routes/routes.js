@@ -6,9 +6,12 @@ const handleLogin = require('../controllers/authController');
 const handleRefresh = require('../controllers/refreshController');
 const handleRolesVerify = require('../middleware/rolesVerify')
 const authorizedRoles = require('../config/authorizedRoles.js')
+const handleLogout = require('../controllers/logoutController')
 
 router.post('/auth', handleLogin);
 router.get('/auth', handleRefresh);
+
+router.get('/logout', handleLogout);
 
 router.get('/',jwtVerify,handleRolesVerify(authorizedRoles.admin), userController.getUsers);
 router.post('/', userController.registerUser);

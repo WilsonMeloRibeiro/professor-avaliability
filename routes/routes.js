@@ -13,7 +13,7 @@ router.get('/auth', handleRefresh);
 
 router.get('/logout', handleLogout);
 
-router.get('/',jwtVerify,handleRolesVerify(authorizedRoles.admin), userController.getUsers);
+router.get('/', userController.getUsers);
 router.post('/', userController.registerUser);
 router.put('/', userController.updateUser);
 router.delete('/', userController.deleteUser);

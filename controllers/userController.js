@@ -1,11 +1,11 @@
 const user = require('../model/user');
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
 const salt = 10;
 const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res)=>{
     const result = await user.find();
-    console.log(req.username,req.roles)
     return res.status(200).json(result);
 }
 const registerUser = async (req, res)=>{
@@ -73,6 +73,10 @@ const deleteUser = async (req, res)=>{
 }
 
 const getUser = async (req, res)=>{
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
     const userFound = await user.findById(req.params.id)
     if(!userFound) return res.status(400).json('User not found')
     return res.status(200).json(userFound)

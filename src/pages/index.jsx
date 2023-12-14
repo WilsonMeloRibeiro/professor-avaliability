@@ -3,7 +3,7 @@ import axios from 'axios';
 import './style.css';
 import { getCookieParser } from 'next/dist/server/api-utils';
 import { document } from 'postcss';
-export default function register() {
+export default function index() {
 
     
 

@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import axios from 'axios';
 import './style.css';
 import cookieParser from 'cookie-parser';
 export default function register() {
-
     const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9]{3,23}$/;
     const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 

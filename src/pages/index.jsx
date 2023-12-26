@@ -1,11 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import axios from 'axios';
 import './style.css';
 import { getCookieParser } from 'next/dist/server/api-utils';
 import { document } from 'postcss';
+import AuthContext from '../../context/AuthProvider';
 export default function index() {
-
-    
+    const {auth} = useContext(AuthContext)
+    console.log(auth)
 
 
     return (

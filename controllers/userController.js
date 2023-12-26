@@ -19,7 +19,7 @@ const registerUser = async (req, res)=>{
     const REFRESH_TOKEN = jwt.sign(
         {
             userInfo:{
-                username: username,
+                email: email,
                 roles:{
                     user:200
                 }
@@ -32,7 +32,7 @@ const registerUser = async (req, res)=>{
     const ACCESS_TOKEN = jwt.sign(
         {
             userInfo:{
-                username: username,
+                email: email,
                 roles:{
                     user:200
                 }
@@ -46,6 +46,7 @@ const registerUser = async (req, res)=>{
     username,
     email,
     password,
+    invitations:null,
     refreshToken: REFRESH_TOKEN
 });
     console.log(result)
@@ -57,7 +58,8 @@ const updateUser = async (req, res)=>{
     const userFound = await user.findById(req.body.id)
     if(!userFound) return res.status(400).json('User not found');
     
-    const {username, email} = req.body;
+    const {username, email, invitations} = req.body;
+    userFound.invitations = invitations
     userFound.username = username;
     userFound.email = email;
     

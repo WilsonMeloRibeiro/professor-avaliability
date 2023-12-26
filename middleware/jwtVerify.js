@@ -9,7 +9,7 @@ const jwtVerify = (req, res, next)=>{
         process.env.ACCESS_TOKEN_SECRET,
         (err, decoded)=>{
             if(err) return res.status(401).json('Not authorized')
-            req.username = decoded.userInfo.username
+            req.email = decoded.userInfo.email
             req.roles = decoded.userInfo.roles
             next()
         }

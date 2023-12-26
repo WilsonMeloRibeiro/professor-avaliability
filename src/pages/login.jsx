@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import axios from 'axios';
 import './style.css';
+import AuthContext from '../../context/AuthProvider';
 export default function login() {
-
+    const {setAuth} = useContext(AuthContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -13,7 +14,15 @@ export default function login() {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('a')
+        const user = {
+            email,
+            password
+        }
+        const result = await axios.post("http://localhost:3333/auth", user, {headers:{'Content-Type': 'application/json'}})
+        const roles = result.data?.roles
+        const accessToken = result.data?.ACCESS_TOKEN
+        setAuth({email, password, roles, accessToken})
+        console.log(result)
     }
     const [error, setError] = useState('')
     const [buttonEnabled, setButtonEnabled] = useState(false)

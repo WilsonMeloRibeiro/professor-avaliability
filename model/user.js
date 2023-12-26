@@ -16,6 +16,9 @@ const userSchema = new mongoose.Schema({
     refreshToken:{
         type: String
     },
+    invitations:{
+        type: Number
+    },
     roles:{
         user:{
             type: Number,

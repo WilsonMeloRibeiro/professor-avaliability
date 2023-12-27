@@ -9,6 +9,7 @@ const handleLogin = async (req, res) => {
     const userFound = await user.findOne({ email: email })
     if(!userFound) return res.sendStatus(400)
     const match = await bcrypt.compare(password, userFound.password)
+    const username = userFound.username
     console.log(match);
     if(match){
         const roles = Object.values(userFound.roles).filter(Boolean);
@@ -36,7 +37,7 @@ const handleLogin = async (req, res) => {
         const result = await userFound.save()
         console.log(result);
         res.cookie('jwt', REFRESH_TOKEN, {httpOnly:true, expiresIn: '24h'})
-        res.status(200).json({ACCESS_TOKEN, roles})
+        res.status(200).json({ACCESS_TOKEN, roles, username })
     }
     else return res.sendStatus(403)
 }

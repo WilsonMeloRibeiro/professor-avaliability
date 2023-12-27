@@ -5,8 +5,6 @@ const handleRefresh = async (req, res) => {
     if (!req.cookies?.jwt) return res.sendStatus(403)
     const cookie = req.cookies.jwt
     const userFound = await user.findOne({ refreshToken: cookie })
-    console.log(userFound.refreshToken)
-    console.log(cookie)
     if (!userFound) return res.sendStatus(403)
     jwt.verify(
         cookie,

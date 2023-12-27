@@ -25,5 +25,7 @@ router.post('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), inv
 router.put('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.updateInvitation);
 router.delete('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.deleteInvitation);
 router.get('/invitation/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitation);
+router.get('/invitationowner/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationOwner);
+router.get('/invitationdestiny/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationDestiny);
 
 module.exports=router

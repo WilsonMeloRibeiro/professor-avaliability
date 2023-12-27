@@ -48,4 +48,22 @@ const getInvitation = async (req, res) => {
     if (!invitationFound) return res.status(400).json('Invitation not found')
     return res.status(200).json(invitationFound)
 }
-module.exports = { getInvitations, registerInvitation, updateInvitation, deleteInvitation, getInvitation }
+const getInvitationOwner = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_owner: req.params.id})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+const getInvitationDestiny = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_destiny: req.params.id})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+module.exports = { getInvitations, registerInvitation, updateInvitation, deleteInvitation, getInvitationDestiny, getInvitationOwner, getInvitation }

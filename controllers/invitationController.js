@@ -6,11 +6,11 @@ const getInvitations = async (req, res) => {
     return res.status(200).json(result);
 }
 const registerInvitation = async (req, res) => {
-    const invitation_owner = req.body.invitation_owner;
-    const invitation_destiny = req.body.invitation_destiny;
-    const title = req.body.title;
-    const description = req.body.description;
-    const status = req.body.status;
+    const invitation_owner = req.body?.invitation_owner;
+    const invitation_destiny = req.body?.invitation_destiny;
+    const title = req.body?.title;
+    const description = req.body?.description;
+    const status = req.body?.status;
     const result = await invitation.create({
         title,
         description,
@@ -26,7 +26,9 @@ const updateInvitation = async (req, res) => {
     if (!invitationFound) return res.status(400).json('invitation not found');
 
     const status = req.body.status;
+    const destiny = req.body.destiny
     invitationFound.status = status;
+    invitationFound.invitation_destiny = destiny;
 
     const result = await invitationFound.save()
     return res.status(200).json(result);
@@ -57,13 +59,67 @@ const getInvitationOwner = async (req, res) => {
     if (!invitationFound) return res.status(400).json('Invitation not found')
     return res.status(200).json(invitationFound)
 }
+const getInvitationOwnerAccepted = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_owner: req.params.id, status: 'aceito'})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+const getInvitationOwnerPending = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_owner: req.params.id, status: 'pendente'})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+const getInvitationOwnerDeclined = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_owner: req.params.id, status: 'recusado'})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
 const getInvitationDestiny = async (req, res) => {
     // if req.params._id is favicon.ico then response immediately
     if (req.params.id === "favicon.ico") {
         return res.status(404)
     }
-    const invitationFound = await invitation.find({invitation_destiny: req.params.id})
+    const invitationFound = await invitation.find({invitation_destiny: ''})
     if (!invitationFound) return res.status(400).json('Invitation not found')
     return res.status(200).json(invitationFound)
 }
-module.exports = { getInvitations, registerInvitation, updateInvitation, deleteInvitation, getInvitationDestiny, getInvitationOwner, getInvitation }
+const getInvitationDestinyAccepted = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_destiny: req.params.id, status: 'aceito'})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+const getInvitationDestinyDeclined = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({invitation_destiny: req.params.id, status: 'recusado'})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+const getInvitationDestinyPending = async (req, res) => {
+    // if req.params._id is favicon.ico then response immediately
+    if (req.params.id === "favicon.ico") {
+        return res.status(404)
+    }
+    const invitationFound = await invitation.find({$or: [{invitation_destiny: req.params.id, status: 'pendente'}, {invitation_destiny: '', status: 'pendente'}]})
+    if (!invitationFound) return res.status(400).json('Invitation not found')
+    return res.status(200).json(invitationFound)
+}
+module.exports = { getInvitations, registerInvitation, updateInvitation, deleteInvitation, getInvitationDestiny, getInvitationOwner, getInvitation, getInvitationOwnerAccepted, getInvitationDestinyAccepted, getInvitationDestinyPending, getInvitationDestinyDeclined, getInvitationOwnerDeclined, getInvitationOwnerPending }

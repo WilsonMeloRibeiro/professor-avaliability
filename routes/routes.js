@@ -20,12 +20,20 @@ router.put('/', userController.updateUser);
 router.delete('/', userController.deleteUser);
 router.get('/:id', userController.getUser);
 
+
+//n ta otimizado mas funciona :)
 router.get('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitations);
 router.post('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.registerInvitation);
 router.put('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.updateInvitation);
 router.delete('/invitation',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.deleteInvitation);
 router.get('/invitation/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitation);
 router.get('/invitationowner/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationOwner);
+router.get('/invitationowneraccepted/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationOwnerAccepted);
+router.get('/invitationownerdeclined/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationOwnerDeclined);
+router.get('/invitationownerpending/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationOwnerPending);
 router.get('/invitationdestiny/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationDestiny);
+router.get('/invitationdestinyaccepted/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationDestinyAccepted);
+router.get('/invitationdestinydeclined/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationDestinyDeclined);
+router.get('/invitationdestinypending/:id',jwtVerify,handleRolesVerify(authorizedRoles.user), invitationController.getInvitationDestinyPending);
 
 module.exports=router

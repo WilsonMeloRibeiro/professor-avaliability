@@ -22,6 +22,7 @@ export default function login() {
         const result = await axios.post("http://localhost:3333/auth", user, {headers:{'Content-Type': 'application/json'}})
         const roles = result.data?.roles
         const accessToken = result.data?.ACCESS_TOKEN
+        console.log(accessToken)
         const username = result.data?.username
         setCookie('userInfo', JSON.stringify({email, password, roles, accessToken, username}), {path:'/'})
         return window.location.replace('./dashboard')

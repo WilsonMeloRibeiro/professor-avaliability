@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     invitation_destiny:{
         type: String,
-        required: true
+        required: false
     },
     status:{
         type: String,

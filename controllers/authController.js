@@ -31,7 +31,7 @@ const handleLogin = async (req, res) => {
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
-            {expiresIn:'1m'}
+            {expiresIn:'24h'}
         )
         userFound.refreshToken = REFRESH_TOKEN
         const result = await userFound.save()
